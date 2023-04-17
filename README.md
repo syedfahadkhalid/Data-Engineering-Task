@@ -1,2 +1,3 @@
 # Data-Engineering-Task
-This repository is created for a job assessment task.
+
+You can find the completed task under "Data Engineering Task" folder. 

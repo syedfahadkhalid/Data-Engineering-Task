@@ -32,19 +32,21 @@ def aggrigate_data(df):
         This function calculates the aggigrated Temprature, Datapoints and Total Distance covered of the dataframe supplied
     '''
     try:
+        # Group by fethced data by devices
         grouped = df.groupby('device_id')
 
+        # Aggrigating Temp, Datapoints & distance
         temp = grouped['temperature'].max()
         datapoint = grouped['time'].count()
         total_distance = grouped['location'].apply(lambda x: calculate_distance(x))
 
+        # Union of result
         result = pd.concat([temp,datapoint,total_distance],axis=1)
         result = result.rename(columns={'location': 'total_distance','temperature': 'max_temperature', 'time': 'total_datapoints'})
 
         current_time = datetime.datetime.now()
         result['datetime'] = current_time.strftime('%Y-%m-%d')
         result['hour'] = int(current_time.strftime('%-H'))
-        result['total_distance'] = total_distance
 
         print("data aggrigated")
     except Exception as e:
@@ -141,9 +143,11 @@ def runner():
 
         print('Waiting for data to be populate')
         sleep(20)
+
         while start == 0:
             start = get_start_timestamp(psql_engine)
             end = start + 1
+            
         while True:
             df = get_data(start,end,psql_engine)
             data = aggrigate_data(df) 
